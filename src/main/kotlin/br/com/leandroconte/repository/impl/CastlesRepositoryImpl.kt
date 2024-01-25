@@ -1,10 +1,12 @@
-package br.com.leandroconte.dao.impl
+package br.com.leandroconte.repository.impl
 
-import br.com.leandroconte.dao.CastlesDAO
+import br.com.leandroconte.repository.CastlesRepository
 import br.com.leandroconte.models.Castle
 import br.com.leandroconte.models.CastleEntity
+import org.koin.core.annotation.Single
 
-class CastlesDAOImpl : CastlesDAO {
+@Single
+class CastlesRepositoryImpl : CastlesRepository {
     override fun allCastles(): List<CastleEntity> = CastleEntity.all().toList()
 
     override fun castle(id: Long): CastleEntity? = CastleEntity.findById(id)

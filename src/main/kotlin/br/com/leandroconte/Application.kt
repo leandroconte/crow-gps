@@ -1,7 +1,7 @@
 package br.com.leandroconte
 
-import br.com.leandroconte.dao.DatabaseSingleton
 import br.com.leandroconte.plugins.*
+import br.com.leandroconte.repository.DatabaseSingleton
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
@@ -18,4 +18,5 @@ fun Application.module() {
     configureAdministration()
     configureHTTP()
     configureRouting()
+    configureKoin()
 }

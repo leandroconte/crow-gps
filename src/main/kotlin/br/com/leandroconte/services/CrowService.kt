@@ -7,5 +7,6 @@ interface CrowService {
 
     suspend fun sendMessage(sendCrowMailCommand: SendCrowMailCommand)
     suspend fun list(): List<CrowMail>
+    suspend fun get(id: Long): CrowMail
 
 }

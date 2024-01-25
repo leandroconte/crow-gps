@@ -1,4 +1,4 @@
-package br.com.leandroconte.dao
+package br.com.leandroconte.repository
 
 import br.com.leandroconte.models.CrowsMail
 import kotlinx.coroutines.Dispatchers

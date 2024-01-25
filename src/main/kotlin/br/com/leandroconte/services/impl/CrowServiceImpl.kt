@@ -7,20 +7,29 @@ import br.com.leandroconte.dao.impl.CrowsDAOImpl
 import br.com.leandroconte.models.Castle
 import br.com.leandroconte.models.CrowMail
 import br.com.leandroconte.models.CrowMailEntity
+import br.com.leandroconte.models.*
+import br.com.leandroconte.repository.CastlesRepository
+import br.com.leandroconte.repository.CrowsRepository
 import br.com.leandroconte.routes.crow.command.SendCrowMailCommand
 import br.com.leandroconte.services.CrowService
+import com.google.gson.Gson
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.koin.core.annotation.Single
 
-class CrowServiceImpl : CrowService {
+@Single
+class CrowServiceImpl(
+    val crowsRepository: CrowsRepository,
+    val castlesRepository: CastlesRepository,
+    val crowProducer: CrowProducer
+) : CrowService {
 
-    val crowsDao: CrowsDAO = CrowsDAOImpl();
-    val castlesDao: CastlesDAO = CastlesDAOImpl();
+    val gson: Gson = Gson()
 
     override suspend fun sendMessage(sendCrowMailCommand: SendCrowMailCommand) {
         transaction {
             val randomCrowName = getRandomCrowName()
-            val origCastle = castlesDao.castle(sendCrowMailCommand.idOriginCastle)?.toCastle()
-            val destCastle = castlesDao.castle(sendCrowMailCommand.idDestinationCastle)?.toCastle()
+            val origCastle = castlesRepository.castle(sendCrowMailCommand.idOriginCastle)?.toCastle()
+            val destCastle = castlesRepository.castle(sendCrowMailCommand.idDestinationCastle)?.toCastle()
 
             val crowMail = CrowMail(
                 id = null,
@@ -30,6 +39,7 @@ class CrowServiceImpl : CrowService {
             )
 
             crowsDao.addCrowMail(crowMail)
+            val idCrow = crowsRepository.addCrowMail(crowMail).id.value
         }
     }
 
@@ -44,6 +54,21 @@ class CrowServiceImpl : CrowService {
 
         return crows
     }
+
+    override suspend fun get(id: Long): CrowMail {
+        var crowMail: CrowMail? = null
+
+        transaction {
+            val crowMailEntity = crowsRepository.crowMail(id)
+            crowMailEntity ?: throw IllegalArgumentException("Crow not found")
+            crowMail = toCrowMail(crowMailEntity)
+        }
+
+        return crowMail!!
+
+
+    }
+
 
     private fun toCrowMail(it: CrowMailEntity) = CrowMail(
         id = it.id.value,
