@@ -1,6 +1,5 @@
 package br.com.leandroconte.repository.impl
 
-import br.com.leandroconte.dao.CrowsDAO
 import br.com.leandroconte.models.CastleEntity
 import br.com.leandroconte.models.CrowMail
 import br.com.leandroconte.models.CrowMailEntity

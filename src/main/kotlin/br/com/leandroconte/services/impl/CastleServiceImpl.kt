@@ -1,8 +1,5 @@
 package br.com.leandroconte.services.impl
 
-import br.com.leandroconte.dao.CastlesDAO
-import br.com.leandroconte.dao.impl.CastlesDAOImpl
-import br.com.leandroconte.dto.CastleDTO
 import br.com.leandroconte.models.Castle
 import br.com.leandroconte.repository.CastlesRepository
 import br.com.leandroconte.routes.castles.command.CreateCastleCommand

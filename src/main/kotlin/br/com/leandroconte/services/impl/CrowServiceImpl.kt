@@ -1,12 +1,6 @@
 package br.com.leandroconte.services.impl
 
-import br.com.leandroconte.dao.CastlesDAO
-import br.com.leandroconte.dao.CrowsDAO
-import br.com.leandroconte.dao.impl.CastlesDAOImpl
-import br.com.leandroconte.dao.impl.CrowsDAOImpl
-import br.com.leandroconte.models.Castle
-import br.com.leandroconte.models.CrowMail
-import br.com.leandroconte.models.CrowMailEntity
+import br.com.leandroconte.anticorruption.kafka.producer.CrowProducer
 import br.com.leandroconte.models.*
 import br.com.leandroconte.repository.CastlesRepository
 import br.com.leandroconte.repository.CrowsRepository
@@ -38,8 +32,9 @@ class CrowServiceImpl(
                 destinationCastle = destCastle!!
             )
 
-            crowsDao.addCrowMail(crowMail)
             val idCrow = crowsRepository.addCrowMail(crowMail).id.value
+            val crowPosition = CrowPosition(idCrow, LatLng(origCastle.lat, origCastle.lng))
+            crowProducer.produceMessages(gson.toJson(crowPosition))
         }
     }
 
